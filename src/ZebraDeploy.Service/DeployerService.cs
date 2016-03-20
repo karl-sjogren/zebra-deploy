@@ -7,6 +7,9 @@ namespace ZebraDeploy.Service {
 
         public ZebraDeploy() {
             InitializeComponent();
+
+            // Set working directory
+            System.IO.Directory.SetCurrentDirectory(System.AppDomain.CurrentDomain.BaseDirectory);
         }
 
         protected override void OnStart(string[] args) {

@@ -23,7 +23,7 @@ namespace ZebraDeploy.Core {
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
                 .WriteTo.ColoredConsole()
-                .WriteTo.RollingFile(@"zebra-deploy-{Date}.log")
+                .WriteTo.RollingFile(@"logs\zebra-deploy-{Date}.log")
                 .CreateLogger();
 
             _log = Log.ForContext<Deployer>(); // Recreate this so we can log properly
