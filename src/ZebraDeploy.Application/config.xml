@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+  <basePath>X:\zebra-deploy\dropzone</basePath>
+  <stripes>
+    <stripe file="website.zip">
+      <stopAppPool name="DefaultAppPool" />
+      <clean path="X:\zebra-deploy\website">
+        <exclude name="images"/>
+      </clean>
+      <output path="X:\zebra-deploy\website"/>
+      <startAppPool name="DefaultAppPool" />
+    </stripe>
+  </stripes>
+</configuration>

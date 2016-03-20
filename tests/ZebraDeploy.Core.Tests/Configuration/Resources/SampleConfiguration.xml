@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+  <basePath>D:\zebra-deploy\</basePath>
+  <stripes>
+    <stripe file="website.zip">
+      <stopAppPool name="MyWebSiteAppliationPool" />
+      <clean path="D:\inetput\mysite">
+        <exclude name="images"/>
+      </clean>
+      <output path="D:\inetput\mysite"/>
+      <startAppPool name="MyWebSiteAppliationPool" />
+    </stripe>
+  </stripes>
+</configuration>

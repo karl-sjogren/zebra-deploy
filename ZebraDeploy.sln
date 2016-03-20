@@ -1,0 +1,45 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZebraDeploy.Core", "src\ZebraDeploy.Core\ZebraDeploy.Core.csproj", "{2EA6FAB7-F551-43C8-90A1-86F3108793CC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{AEA9C9FA-1512-421A-B1F9-DC0144EBCED4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZebraDeploy.Core.Tests", "tests\ZebraDeploy.Core.Tests\ZebraDeploy.Core.Tests.csproj", "{C9DF0231-F397-41E0-A1CF-141A9ECA0A58}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZebraDeploy.Application", "src\ZebraDeploy.Application\ZebraDeploy.Application.csproj", "{348DDDC1-FDC7-4ED2-BAEC-672BC8D2AB5A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZebraDeploy.Service", "src\ZebraDeploy.Service\ZebraDeploy.Service.csproj", "{D105D2E4-6EC0-4FD6-903B-CBCEA00187B5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2EA6FAB7-F551-43C8-90A1-86F3108793CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2EA6FAB7-F551-43C8-90A1-86F3108793CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2EA6FAB7-F551-43C8-90A1-86F3108793CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2EA6FAB7-F551-43C8-90A1-86F3108793CC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C9DF0231-F397-41E0-A1CF-141A9ECA0A58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9DF0231-F397-41E0-A1CF-141A9ECA0A58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C9DF0231-F397-41E0-A1CF-141A9ECA0A58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C9DF0231-F397-41E0-A1CF-141A9ECA0A58}.Release|Any CPU.Build.0 = Release|Any CPU
+		{348DDDC1-FDC7-4ED2-BAEC-672BC8D2AB5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{348DDDC1-FDC7-4ED2-BAEC-672BC8D2AB5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{348DDDC1-FDC7-4ED2-BAEC-672BC8D2AB5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{348DDDC1-FDC7-4ED2-BAEC-672BC8D2AB5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D105D2E4-6EC0-4FD6-903B-CBCEA00187B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D105D2E4-6EC0-4FD6-903B-CBCEA00187B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D105D2E4-6EC0-4FD6-903B-CBCEA00187B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D105D2E4-6EC0-4FD6-903B-CBCEA00187B5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C9DF0231-F397-41E0-A1CF-141A9ECA0A58} = {AEA9C9FA-1512-421A-B1F9-DC0144EBCED4}
+	EndGlobalSection
+EndGlobal
