@@ -1,5 +1,7 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
+using System.Threading;
 using Serilog;
 using ZebraDeploy.Core.Configuration;
 
@@ -15,10 +17,29 @@ namespace ZebraDeploy.Core.StripeSteps {
         public override void Invoke(Stripe stripe, string zipPath) {
             _log.Debug("Cleaning path {path}, excluding {excludes}.", _configuration.Path, string.Join(", ", _configuration.Excludes));
 
-            foreach (var directory in Directory.EnumerateDirectories(_configuration.Path)) {
+            var startTime = DateTime.Now;
+            while(true) {
+                var failed = false;
+                try {
+                    Clean();
+                } catch(Exception) {
+                    if(startTime.AddSeconds(30) > DateTime.Now)
+                        break;
+
+                    Thread.Sleep(500);
+                    failed = true;
+                }
+
+                if(!failed)
+                    break;
+            }
+        }
+
+        private void Clean() {
+            foreach(var directory in Directory.EnumerateDirectories(_configuration.Path)) {
                 var info = new DirectoryInfo(directory);
 
-                if (_configuration.Excludes.Contains(info.Name.ToLowerInvariant()))
+                if(_configuration.Excludes.Contains(info.Name.ToLowerInvariant()))
                     continue;
 
                 Directory.Delete(info.FullName, true);

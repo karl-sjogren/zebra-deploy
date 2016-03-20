@@ -16,7 +16,7 @@ namespace ZebraDeploy.Core {
         private readonly object _lock = new object();
 
         public Deployer(string configurationFile = "config.xml") {
-            
+
             if(!Directory.Exists("logs"))
                 Directory.CreateDirectory("logs");
 
@@ -60,13 +60,17 @@ namespace ZebraDeploy.Core {
                 _threads.Add(file, thread);
             }
         }
-        
+
         private void ExecuteStripe(Stripe stripe) {
             var zipPath = Path.Combine(_configuration.BasePath, stripe.File);
             _log.Information("Executing stripe for {file}.", zipPath);
 
             foreach(var step in stripe.Steps) {
-                step.Invoke(stripe, zipPath);
+                try {
+                    step.Invoke(stripe, zipPath);
+                } catch(Exception e) {
+                    _log.Error(e, "Failed to execute step {type}.", step.GetType().Name);
+                }
             }
 
             try {
@@ -76,6 +80,7 @@ namespace ZebraDeploy.Core {
                 File.Delete(zipPath);
             }
 
+            _log.Information("Executed stripe for {file}.", zipPath);
             Thread.CurrentThread.Abort();
         }
 
