@@ -40,7 +40,7 @@ namespace ZebraDeploy.Core.StripeSteps {
                                 // Here there be dragons, beware..
                             }
 
-                            if(timestamp.AddSeconds(20) > DateTime.Now)
+                            if(timestamp.AddSeconds(20) < DateTime.Now)
                                 break;
 
                             Thread.Sleep(200);
@@ -60,7 +60,7 @@ namespace ZebraDeploy.Core.StripeSteps {
                                 // Here there be dragons, beware..
                             }
 
-                            if(timestamp.AddSeconds(20) > DateTime.Now)
+                            if(timestamp.AddSeconds(20) < DateTime.Now)
                                 break;
 
                             Thread.Sleep(200);
