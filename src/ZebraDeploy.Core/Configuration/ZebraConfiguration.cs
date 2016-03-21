@@ -6,7 +6,7 @@ using ZebraDeploy.Core.Extensions;
 
 namespace ZebraDeploy.Core.Configuration {
     public class ZebraConfiguration {
-        public string BasePath { get; internal set; }
+        public string BasePath { get; private set; }
 
         private readonly List<StripeConfiguration> _stripes;
         public IReadOnlyCollection<StripeConfiguration> Stripes => new ReadOnlyCollection<StripeConfiguration>(_stripes);

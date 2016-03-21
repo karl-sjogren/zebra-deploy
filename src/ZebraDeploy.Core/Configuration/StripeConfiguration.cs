@@ -6,7 +6,7 @@ using ZebraDeploy.Core.Extensions;
 
 namespace ZebraDeploy.Core.Configuration {
     public class StripeConfiguration {
-        public string File { get; internal set; }
+        public string File { get; private set; }
 
         private readonly List<StripeStepConfiguration> _steps;
         public IReadOnlyCollection<StripeStepConfiguration> Steps => new ReadOnlyCollection<StripeStepConfiguration>(_steps);

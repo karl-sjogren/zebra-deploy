@@ -5,12 +5,12 @@ using Serilog;
 using ZebraDeploy.Core.Configuration;
 
 namespace ZebraDeploy.Core.StripeSteps {
-    public class AppPoolStep : StripeStep {
-        private readonly ILogger _log = Log.ForContext<AppPoolStep>();
-        private readonly AppPoolStepConfiguration _configuration;
+    public class WebsiteStep : StripeStep {
+        private readonly ILogger _log = Log.ForContext<WebsiteStep>();
+        private readonly WebsiteStepConfiguration _configuration;
         private static readonly object _lock = new object();
 
-        public AppPoolStep(AppPoolStepConfiguration configuration) {
+        public WebsiteStep(WebsiteStepConfiguration configuration) {
             _configuration = configuration;
         }
 
@@ -20,14 +20,14 @@ namespace ZebraDeploy.Core.StripeSteps {
             lock (_lock) {
                 try {
                     var manager = new ServerManager();
-                    var pool = manager.ApplicationPools[_configuration.Name];
-                    if(pool == null)
-                        throw new InvalidOperationException($"Failed to locate application pool named {_configuration.Name}.");
+                    var site = manager.Sites[_configuration.Name];
+                    if(site == null)
+                        throw new InvalidOperationException($"Failed to locate website named {_configuration.Name}.");
 
 
                     var timestamp = DateTime.Now;
                     if(_configuration.Action == "start") {
-                        if(pool.State == ObjectState.Started || pool.State == ObjectState.Starting)
+                        if(site.State == ObjectState.Started || site.State == ObjectState.Starting)
                             return;
 
                         _log.Debug("Starting application pool {poolName}", _configuration.Name);
@@ -35,7 +35,7 @@ namespace ZebraDeploy.Core.StripeSteps {
                         var state = ObjectState.Unknown;
                         while(state != ObjectState.Started) {
                             try {
-                                pool.Start();
+                                site.Start();
                             } catch(Exception) {
                                 // Here there be dragons, beware..
                             }
@@ -44,10 +44,10 @@ namespace ZebraDeploy.Core.StripeSteps {
                                 break;
 
                             Thread.Sleep(200);
-                            state = pool.State;
+                            state = site.State;
                         }
                     } else {
-                        if(pool.State == ObjectState.Stopped || pool.State == ObjectState.Stopping)
+                        if(site.State == ObjectState.Stopped || site.State == ObjectState.Stopping)
                             return;
 
                         _log.Debug("Stopping application pool {poolName}", _configuration.Name);
@@ -55,7 +55,7 @@ namespace ZebraDeploy.Core.StripeSteps {
                         var state = ObjectState.Unknown;
                         while(state != ObjectState.Stopped) {
                             try {
-                                pool.Stop();
+                                site.Stop();
                             } catch(Exception) {
                                 // Here there be dragons, beware..
                             }
@@ -64,11 +64,11 @@ namespace ZebraDeploy.Core.StripeSteps {
                                 break;
 
                             Thread.Sleep(200);
-                            state = pool.State;
+                            state = site.State;
                         }
                     }
                 } catch(Exception e) {
-                    _log.Error(e, "Failed while working with application pool {poolName}", _configuration.Name);
+                    _log.Error(e, "Failed while working with website {poolName}", _configuration.Name);
                 }
             }
         }

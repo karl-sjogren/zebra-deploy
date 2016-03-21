@@ -8,6 +8,9 @@ namespace ZebraDeploy.Core.Configuration {
 
             if(element.Name == "startAppPool" || element.Name == "stopAppPool")
                 return new AppPoolStepConfiguration(element);
+
+            if(element.Name == "startWebsite" || element.Name == "stopWebsite")
+                return new WebsiteStepConfiguration(element);
             
             if(element.Name == "output")
                 return new OutputStepConfiguration(element);

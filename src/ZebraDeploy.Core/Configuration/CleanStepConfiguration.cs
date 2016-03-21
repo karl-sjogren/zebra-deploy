@@ -6,7 +6,7 @@ using ZebraDeploy.Core.Extensions;
 
 namespace ZebraDeploy.Core.Configuration {
     public class CleanStepConfiguration : StripeStepConfiguration {
-        public string Path { get; internal set; }
+        public string Path { get; private set; }
 
         private readonly List<string> _excludes;
         public IReadOnlyCollection<string> Excludes => new ReadOnlyCollection<string>(_excludes);

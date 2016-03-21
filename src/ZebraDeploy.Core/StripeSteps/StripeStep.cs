@@ -11,6 +11,9 @@ namespace ZebraDeploy.Core.StripeSteps {
             if(configuration.GetType() == typeof(AppPoolStepConfiguration))
                 return new AppPoolStep(configuration as AppPoolStepConfiguration);
 
+            if(configuration.GetType() == typeof(WebsiteStepConfiguration))
+                return new WebsiteStep(configuration as WebsiteStepConfiguration);
+
             if(configuration.GetType() == typeof(OutputStepConfiguration))
                 return new OutputStep(configuration as OutputStepConfiguration);
 

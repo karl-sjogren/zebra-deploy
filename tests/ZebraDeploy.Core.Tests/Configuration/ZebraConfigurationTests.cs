@@ -15,10 +15,11 @@ namespace ZebraDeploy.Core.Tests.Configuration {
 
             var stripe = config.Stripes.First();
             Assert.AreEqual("website.zip", stripe.File);
-            Assert.AreEqual(4, stripe.Steps.Count);
+            Assert.AreEqual(6, stripe.Steps.Count);
             Assert.AreEqual(1, stripe.Steps.Count(step => step.GetType() == typeof(CleanStepConfiguration)));
             Assert.AreEqual(1, stripe.Steps.Count(step => step.GetType() == typeof(OutputStepConfiguration)));
             Assert.AreEqual(2, stripe.Steps.Count(step => step.GetType() == typeof(AppPoolStepConfiguration)));
+            Assert.AreEqual(2, stripe.Steps.Count(step => step.GetType() == typeof(WebsiteStepConfiguration)));
         }
 
         [Test]
