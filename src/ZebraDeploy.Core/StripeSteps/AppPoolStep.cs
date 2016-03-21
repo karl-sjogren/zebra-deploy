@@ -14,6 +14,13 @@ namespace ZebraDeploy.Core.StripeSteps {
             _configuration = configuration;
         }
 
+        public override string ToString() {
+            if (_configuration.Action == "start")
+                return "Start ApplicationPool " + _configuration.Name;
+
+            return "Stop ApplicationPool " + _configuration.Name;
+        }
+
         public override void Invoke(Stripe stripe, string zipPath) {
             // Server manager seems to be using some COM behind the scenes
             // that doesn't like it multithreaded..

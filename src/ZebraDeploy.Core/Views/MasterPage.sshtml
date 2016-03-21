@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta http-equiv="refresh" content="5">
+        <title>Zebra Deploy</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https://fonts.googleapis.com/css?family=Oswald:300" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css">
+        <style>
+          body {
+            font-family: Roboto;
+          }
+          h1, h2 {
+            font-family: Oswald;
+          }
+          body > div {
+            max-width: 1000px;
+            margin: auto;
+          }
+          table {
+            width: 100%;
+          }
+          th {
+            text-align: left;
+          }
+          tr:nth-child(2n) {
+            background-color: rgba(0,0,0,0.05);
+          }
+        </style>
+    </head>
+    <body>
+        <div role="main">
+            <h1>Zebra Deploy</h1>
+            @Section['Content']
+        </div>
+    </body>
+</html>

@@ -38,6 +38,14 @@
       <HintPath>..\..\packages\Microsoft.Web.Administration.7.0.0.0\lib\net20\Microsoft.Web.Administration.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Nancy, Version=1.4.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Nancy.1.4.3\lib\net40\Nancy.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Nancy.Hosting.Self, Version=1.4.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Nancy.Hosting.Self.1.4.1\lib\net40\Nancy.Hosting.Self.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Serilog, Version=1.5.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Serilog.1.5.14\lib\net45\Serilog.dll</HintPath>
       <Private>True</Private>
@@ -66,6 +74,9 @@
     <Compile Include="Configuration\ZebraConfiguration.cs" />
     <Compile Include="Deployer.cs" />
     <Compile Include="Extensions\XDocumentExtensions.cs" />
+    <Compile Include="Nancy\ZebraBootstrapper.cs" />
+    <Compile Include="Nancy\Models\StripeModel.cs" />
+    <Compile Include="Nancy\Modules\ZebraModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Stripe.cs" />
     <Compile Include="StripeSteps\WebSiteStep.cs" />
@@ -76,6 +87,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Views\Index.sshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\MasterPage.sshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -11,6 +11,10 @@ namespace ZebraDeploy.Core.StripeSteps {
             _configuration = configuration;
         }
 
+        public override string ToString() {
+            return "Extract content to " + _configuration.Path;
+        }
+
         public override void Invoke(Stripe stripe, string zipPath) {
             _log.Debug("Extracting {zipFile}, to {path}.", zipPath, _configuration.Path);
 

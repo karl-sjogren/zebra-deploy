@@ -1,0 +1,30 @@
+﻿@Master['MasterPage']
+
+@Section['Content']
+	<h2>Stripes</h2>
+	<table>
+		<tr>
+			<th>File</th>
+			<th>Current step</th>
+			<th>Last successful deploy</th>
+			<th>Progress</th>
+			<th>Failed</th>
+		</tr>
+		@Each
+			<tr>
+				<td>@Current.File</td>
+				<td>@Current.CurrentStep</td>
+				<td>@Current.LastDeploy</td>
+				<td>@Current.Progress %</td>
+				<td>
+					@IfNot.Current.Failed
+						<input type="checkbox" disabled="disabled" />
+					@EndIf
+					@If.Current.Failed
+						<input type="checkbox" checked="checked" disabled="disabled" />
+					@EndIf
+				</td>
+			</tr>
+		@EndEach
+	</table>
+@EndSection

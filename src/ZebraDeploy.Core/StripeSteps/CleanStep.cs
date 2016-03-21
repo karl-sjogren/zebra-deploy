@@ -14,6 +14,10 @@ namespace ZebraDeploy.Core.StripeSteps {
             _configuration = configuration;
         }
 
+        public override string ToString() {
+            return "Cleaning path " + _configuration.Path;
+        }
+
         public override void Invoke(Stripe stripe, string zipPath) {
             _log.Debug("Cleaning path {path}, excluding {excludes}.", _configuration.Path, string.Join(", ", _configuration.Excludes));
 

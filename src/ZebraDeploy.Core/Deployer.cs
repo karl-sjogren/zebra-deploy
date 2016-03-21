@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading;
+using Nancy.Hosting.Self;
 using Serilog;
 using ZebraDeploy.Core.Configuration;
+using ZebraDeploy.Core.Nancy;
 
 namespace ZebraDeploy.Core {
     public class Deployer : IDisposable {
@@ -13,6 +16,7 @@ namespace ZebraDeploy.Core {
         private readonly DebouncingFileSystemWatcher _watcher;
         private readonly List<Stripe> _stripes;
         private readonly Dictionary<string, Thread> _threads;
+        private readonly NancyHost _host;
         private readonly object _lock = new object();
 
         public Deployer(string configurationFile = "config.xml") {
@@ -28,13 +32,22 @@ namespace ZebraDeploy.Core {
 
             _log = Log.ForContext<Deployer>(); // Recreate this so we can log properly
 
-
             _configuration = ZebraConfiguration.LoadFromFile(configurationFile);
             _watcher = new DebouncingFileSystemWatcher(_configuration.BasePath, "*.zip");
             _threads = new Dictionary<string, Thread>();
 
             _watcher.FileCreated += WatcherFileCreated;
             _stripes = _configuration.Stripes.Select(c => new Stripe(c)).ToList();
+
+            var nancyPort = 7777;
+            try {
+                var bootstrapper = new ZebraBootstrapper(_stripes);
+                _host = new NancyHost(new Uri("http://localhost:" + nancyPort), bootstrapper, new HostConfiguration {
+                    RewriteLocalhost = true
+                });
+            } catch(HttpListenerException) {
+                _log.Warning("Failed to start NancyHost for port {port}.", nancyPort);
+            }
         }
 
         private void WatcherFileCreated(object sender, FileSystemEventArgs fileSystemEventArgs) {
@@ -65,11 +78,18 @@ namespace ZebraDeploy.Core {
             var zipPath = Path.Combine(_configuration.BasePath, stripe.File);
             _log.Information("Executing stripe for {file}.", zipPath);
 
+            stripe.Progress = 0;
+            stripe.Failed = false;
+
             foreach(var step in stripe.Steps) {
                 try {
+                    stripe.CurrentStep = step.ToString();
+                    stripe.Progress = (double)stripe.Steps.ToList().IndexOf(step) / stripe.Steps.Count * 100;
+
                     step.Invoke(stripe, zipPath);
                 } catch(Exception e) {
                     _log.Error(e, "Failed to execute step {type}.", step.GetType().Name);
+                    stripe.Failed = true;
                 }
             }
 
@@ -80,6 +100,11 @@ namespace ZebraDeploy.Core {
                 File.Delete(zipPath);
             }
 
+
+            stripe.LastDeploy = DateTime.Now;
+            stripe.Progress = 100;
+            stripe.CurrentStep = "Done";
+
             _log.Information("Executed stripe for {file}.", zipPath);
             Thread.CurrentThread.Abort();
         }
@@ -87,11 +112,16 @@ namespace ZebraDeploy.Core {
         public void Start() {
             _log.Information("Starting Zebra Deploy.");
             _watcher.Start();
+            _host.Start();
+
         }
 
         public void Stop() {
             _log.Information("Stopping Zebra Deploy.");
             _watcher.Stop();
+            _host.Stop();
+            _host.Dispose();
+
             lock (_lock) {
                 foreach(var kvp in _threads) {
                     if(kvp.Value.IsAlive)
