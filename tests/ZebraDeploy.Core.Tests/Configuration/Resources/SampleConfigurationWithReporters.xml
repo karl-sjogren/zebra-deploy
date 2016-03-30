@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+  <basePath>D:\zebra-deploy\</basePath>
+  <stripes>
+    <stripe file="website.zip">
+      <reporters>
+        <hipchat room="https://zebra.hipchat.com/v2/room/123456789/notification?auth_token=" success="true" failure="true" />
+      </reporters>
+    </stripe>
+  </stripes>
+  <reporters>
+    <hipchat room="https://zebra.hipchat.com/v2/room/123456789/notification?auth_token=" success="false" failure="false" />
+  </reporters>
+</configuration>

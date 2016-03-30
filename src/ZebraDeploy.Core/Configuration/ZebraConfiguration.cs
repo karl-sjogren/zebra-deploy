@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Xml.Linq;
+using ZebraDeploy.Core.Configuration.Reporters;
 using ZebraDeploy.Core.Extensions;
 
 namespace ZebraDeploy.Core.Configuration {
@@ -9,11 +10,15 @@ namespace ZebraDeploy.Core.Configuration {
         public string BasePath { get; private set; }
 
         private readonly List<StripeConfiguration> _stripes;
+        private readonly List<StripeReporterConfiguration> _reporters;
+
         public IReadOnlyCollection<StripeConfiguration> Stripes => new ReadOnlyCollection<StripeConfiguration>(_stripes);
+        public IReadOnlyCollection<StripeReporterConfiguration> Reporters => new ReadOnlyCollection<StripeReporterConfiguration>(_reporters);
 
         internal ZebraConfiguration(XElement element) {
             BasePath = element.Element("basePath").ValueOrDefault();
             _stripes = element.Descendants("stripe").Select(el => new StripeConfiguration(el)).ToList();
+            _reporters = element.Element("reporters")?.Elements().Select(StripeReporterConfiguration.FromXElement).ToList() ?? new List<StripeReporterConfiguration>();
         }
 
         #region Static load methods

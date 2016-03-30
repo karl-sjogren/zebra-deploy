@@ -66,20 +66,41 @@ namespace ZebraDeploy.Core.Tests.Configuration {
         ///  &lt;basePath&gt;D:\zebra-deploy\&lt;/basePath&gt;
         ///  &lt;stripes&gt;
         ///    &lt;stripe file=&quot;website.zip&quot;&gt;
+        ///      &lt;stopWebsite name=&quot;MyWebSite&quot; /&gt;
         ///      &lt;stopAppPool name=&quot;MyWebSiteAppliationPool&quot; /&gt;
         ///      &lt;clean path=&quot;D:\inetput\mysite&quot;&gt;
         ///        &lt;exclude name=&quot;images&quot;/&gt;
         ///      &lt;/clean&gt;
         ///      &lt;output path=&quot;D:\inetput\mysite&quot;/&gt;
         ///      &lt;startAppPool name=&quot;MyWebSiteAppliationPool&quot; /&gt;
+        ///      &lt;startWebsite name=&quot;MyWebSite&quot; /&gt;
         ///    &lt;/stripe&gt;
         ///  &lt;/stripes&gt;
-        ///&lt;/configuration&gt;
-        ///.
+        ///&lt;/configuration&gt; [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string SampleConfiguration {
             get {
                 return ResourceManager.GetString("SampleConfiguration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
+        ///&lt;configuration&gt;
+        ///  &lt;basePath&gt;D:\zebra-deploy\&lt;/basePath&gt;
+        ///  &lt;stripes&gt;
+        ///    &lt;stripe file=&quot;website.zip&quot;&gt;
+        ///      &lt;reporters&gt;
+        ///        &lt;hipchat room=&quot;https://zebra.hipchat.com/v2/room/123456789/notification?auth_token=&quot; starting=&quot;false&quot; succcess=&quot;true&quot; failure=&quot;true&quot; /&gt;
+        ///      &lt;/reporters&gt;
+        ///    &lt;/stripe&gt;
+        ///  &lt;/stripes&gt;
+        ///  &lt;reporters&gt;
+        ///    &lt;hipchat room=&quot;https://zebra.hipchat.com/v2/room/123456789/notification?auth_token=&quot; starting=&quot;false&quot; succcess=&quot;true&quot; failure=&quot;true&quot; /&gt; [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string SampleConfigurationWithReporters {
+            get {
+                return ResourceManager.GetString("SampleConfigurationWithReporters", resourceCulture);
             }
         }
     }

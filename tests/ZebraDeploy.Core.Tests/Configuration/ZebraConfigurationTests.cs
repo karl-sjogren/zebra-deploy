@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using NUnit.Framework;
 using ZebraDeploy.Core.Configuration;
+using ZebraDeploy.Core.Configuration.Reporters;
 
 namespace ZebraDeploy.Core.Tests.Configuration {
     [TestFixture]
@@ -30,6 +31,32 @@ namespace ZebraDeploy.Core.Tests.Configuration {
             var cleanStep = stripe.Steps.Where(step => step.GetType() == typeof (CleanStepConfiguration)).Cast<CleanStepConfiguration>().First();
             Assert.AreEqual(1, cleanStep.Excludes.Count);
             Assert.AreEqual("images", cleanStep.Excludes.First());
+        }
+
+        [Test]
+        public void LoadSampleConfigurationWithLocalReporters() {
+            var config = ZebraConfiguration.Load(Resources.SampleConfigurationWithReporters);
+
+            Assert.IsNotNull(config);
+            Assert.AreEqual(1, config.Stripes.Count);
+
+            var stripe = config.Stripes.First();
+            Assert.AreEqual(1, stripe.Reporters.Count);
+            Assert.AreEqual(1, stripe.Reporters.Count(step => step.GetType() == typeof(HipChatReporterConfiguration)));
+            Assert.IsTrue(config.Reporters.First().ReportSuccess);
+            Assert.IsTrue(config.Reporters.First().ReportFailure);
+        }
+
+        [Test]
+        public void LoadSampleConfigurationWithGlobalReporters() {
+            var config = ZebraConfiguration.Load(Resources.SampleConfigurationWithReporters);
+
+            Assert.IsNotNull(config);
+
+            Assert.AreEqual(1, config.Reporters.Count);
+            Assert.AreEqual(1, config.Reporters.Count(step => step.GetType() == typeof(HipChatReporterConfiguration)));
+            Assert.IsFalse(config.Reporters.First().ReportSuccess);
+            Assert.IsFalse(config.Reporters.First().ReportFailure);
         }
     }
 }

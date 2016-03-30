@@ -9,6 +9,7 @@
       </clean>
       <output path="X:\zebra-deploy\website"/>
       <startAppPool name="DefaultAppPool" />
+      <reporters />
     </stripe>
   </stripes>
 </configuration>

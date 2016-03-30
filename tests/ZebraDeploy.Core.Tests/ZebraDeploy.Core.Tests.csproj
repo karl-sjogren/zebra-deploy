@@ -66,6 +66,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Configuration\Resources\SampleConfigurationWithReporters.xml" />
     <Content Include="Configuration\Resources\SampleConfiguration.xml" />
   </ItemGroup>
   <ItemGroup>

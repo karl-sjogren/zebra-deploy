@@ -88,8 +88,18 @@ namespace ZebraDeploy.Core {
 
                     step.Invoke(stripe, zipPath);
                 } catch(Exception e) {
-                    _log.Error(e, "Failed to execute step {type}.", step.GetType().Name);
                     stripe.Failed = true;
+                    _log.Error(e, "Failed to execute step {type}.", step.GetType().Name);
+
+                    foreach(var reporter in stripe.Reporters.Where(r => r.ReportFailure)) {
+                        try {
+                            reporter.Invoke(stripe);
+                        } catch(Exception ex) {
+                            _log.Error(ex, "Failed to execute reporter {type}.", reporter.GetType().Name);
+                        }
+                    }
+
+                    return;
                 }
             }
 
@@ -100,10 +110,17 @@ namespace ZebraDeploy.Core {
                 File.Delete(zipPath);
             }
 
-
             stripe.LastDeploy = DateTime.Now;
             stripe.Progress = 100;
             stripe.CurrentStep = "Done";
+
+            foreach(var reporter in stripe.Reporters.Where(r => r.ReportSuccess)) {
+                try {
+                    reporter.Invoke(stripe);
+                } catch(Exception e) {
+                    _log.Error(e, "Failed to execute reporter {type}.", reporter.GetType().Name);
+                }
+            }
 
             _log.Information("Executed stripe for {file}.", zipPath);
             Thread.CurrentThread.Abort();
