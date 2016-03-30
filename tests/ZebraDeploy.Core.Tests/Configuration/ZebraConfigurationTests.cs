@@ -16,11 +16,11 @@ namespace ZebraDeploy.Core.Tests.Configuration {
 
             var stripe = config.Stripes.First();
             Assert.AreEqual("website.zip", stripe.File);
-            Assert.AreEqual(6, stripe.Steps.Count);
             Assert.AreEqual(1, stripe.Steps.Count(step => step.GetType() == typeof(CleanStepConfiguration)));
             Assert.AreEqual(1, stripe.Steps.Count(step => step.GetType() == typeof(OutputStepConfiguration)));
             Assert.AreEqual(2, stripe.Steps.Count(step => step.GetType() == typeof(AppPoolStepConfiguration)));
             Assert.AreEqual(2, stripe.Steps.Count(step => step.GetType() == typeof(WebsiteStepConfiguration)));
+            Assert.AreEqual(2, stripe.Steps.Count(step => step.GetType() == typeof(ServiceStepConfiguration)));
         }
 
         [Test]
@@ -43,8 +43,8 @@ namespace ZebraDeploy.Core.Tests.Configuration {
             var stripe = config.Stripes.First();
             Assert.AreEqual(1, stripe.Reporters.Count);
             Assert.AreEqual(1, stripe.Reporters.Count(step => step.GetType() == typeof(HipChatReporterConfiguration)));
-            Assert.IsTrue(config.Reporters.First().ReportSuccess);
-            Assert.IsTrue(config.Reporters.First().ReportFailure);
+            Assert.IsTrue(stripe.Reporters.First().ReportSuccess);
+            Assert.IsTrue(stripe.Reporters.First().ReportFailure);
         }
 
         [Test]

@@ -3,6 +3,7 @@
   <basePath>D:\zebra-deploy\</basePath>
   <stripes>
     <stripe file="website.zip">
+      <stopService name="MyService" />
       <stopWebsite name="MyWebSite" />
       <stopAppPool name="MyWebSiteAppliationPool" />
       <clean path="D:\inetput\mysite">
@@ -11,6 +12,7 @@
       <output path="D:\inetput\mysite"/>
       <startAppPool name="MyWebSiteAppliationPool" />
       <startWebsite name="MyWebSite" />
+      <startService name="MyService" />
     </stripe>
   </stripes>
 </configuration>

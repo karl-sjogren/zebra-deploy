@@ -11,7 +11,10 @@ namespace ZebraDeploy.Core.Configuration {
 
             if(element.Name == "startWebsite" || element.Name == "stopWebsite")
                 return new WebsiteStepConfiguration(element);
-            
+
+            if(element.Name == "startService" || element.Name == "stopService")
+                return new ServiceStepConfiguration(element);
+
             if(element.Name == "output")
                 return new OutputStepConfiguration(element);
 

@@ -3,12 +3,14 @@
   <basePath>X:\zebra-deploy\dropzone</basePath>
   <stripes>
     <stripe file="website.zip">
+      <stopService name="OLA5" />
       <stopAppPool name="DefaultAppPool" />
       <clean path="X:\zebra-deploy\website">
         <exclude name="images"/>
       </clean>
       <output path="X:\zebra-deploy\website"/>
       <startAppPool name="DefaultAppPool" />
+      <startService name="OLA5" />
       <reporters />
     </stripe>
   </stripes>
