@@ -8,6 +8,7 @@ using Nancy.Hosting.Self;
 using Serilog;
 using ZebraDeploy.Core.Configuration;
 using ZebraDeploy.Core.Nancy;
+using ZebraDeploy.Core.StripeSteps.Reporters;
 
 namespace ZebraDeploy.Core {
     public class Deployer : IDisposable {
@@ -15,6 +16,7 @@ namespace ZebraDeploy.Core {
         private readonly ZebraConfiguration _configuration;
         private readonly DebouncingFileSystemWatcher _watcher;
         private readonly List<Stripe> _stripes;
+        private readonly List<StripeReporter> _globalReporters;
         private readonly Dictionary<string, Thread> _threads;
         private readonly NancyHost _host;
         private readonly object _lock = new object();
@@ -38,6 +40,7 @@ namespace ZebraDeploy.Core {
 
             _watcher.FileCreated += WatcherFileCreated;
             _stripes = _configuration.Stripes.Select(c => new Stripe(c)).ToList();
+            _globalReporters = _configuration.Reporters.Select(StripeReporter.CreateStep).Where(x => x != null).ToList();
 
             var nancyPort = 7777;
             try {
@@ -91,7 +94,7 @@ namespace ZebraDeploy.Core {
                     stripe.Failed = true;
                     _log.Error(e, "Failed to execute step {type}.", step.GetType().Name);
 
-                    foreach(var reporter in stripe.Reporters.Where(r => r.ReportFailure)) {
+                    foreach(var reporter in stripe.Reporters.Concat(_globalReporters).Where(r => r.ReportFailure)) {
                         try {
                             reporter.Invoke(stripe);
                         } catch(Exception ex) {
@@ -114,7 +117,7 @@ namespace ZebraDeploy.Core {
             stripe.Progress = 100;
             stripe.CurrentStep = "Done";
 
-            foreach(var reporter in stripe.Reporters.Where(r => r.ReportSuccess)) {
+            foreach(var reporter in stripe.Reporters.Concat(_globalReporters).Where(r => r.ReportSuccess)) {
                 try {
                     reporter.Invoke(stripe);
                 } catch(Exception e) {
