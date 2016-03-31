@@ -2,7 +2,7 @@
 
 @Section['Content']
 	<h2>Stripes</h2>
-	<table>
+	<table id="stripes">
 		<tr>
 			<th>File</th>
 			<th>Current step</th>
@@ -11,12 +11,12 @@
 			<th>Failed</th>
 		</tr>
 		@Each
-			<tr>
-				<td>@Current.File</td>
-				<td>@Current.CurrentStep</td>
-				<td>@Current.LastDeploy</td>
-				<td>@Current.Progress %</td>
-				<td>
+			<tr data-file="@Current.File">
+				<td class="file">@Current.File</td>
+				<td class="current-step">@Current.CurrentStep</td>
+				<td class="last-deploy">@Current.LastDeploy</td>
+				<td class="progress">@Current.Progress %</td>
+				<td class="failed">
 					@IfNot.Current.Failed
 						<input type="checkbox" disabled="disabled" />
 					@EndIf
@@ -27,4 +27,38 @@
 			</tr>
 		@EndEach
 	</table>
+@EndSection
+
+@Section['Scripts']
+<script src="assets/js/moment.min.js"></script>
+<script>
+    var refreshStripes = function refreshStripes() {
+        var http = new XMLHttpRequest();
+        http.open('GET', '/', true);
+        http.setRequestHeader('Accept', 'application/json');
+        http.onreadystatechange = function () {
+            if (http.readyState != 4 || http.status != 200)
+                return;
+
+            var result = JSON.parse(http.responseText);
+            
+            for (var i = 0; i < result.length; i++) {
+                var stripe = result[i];
+                var row = document.querySelector('tr[data-file=\'' + stripe.file + '\']');
+
+                row.querySelector('.file').innerHTML = stripe.file;
+                row.querySelector('.current-step').innerHTML = stripe.currentStep;
+                row.querySelector('.progress').innerHTML = parseInt(stripe.progress) + ' %';
+                row.querySelector('.failed input').checked = stripe.failed;
+
+                var lastDeploy = moment(new Date(stripe.lastDeploy));
+                row.querySelector('.last-deploy').innerHTML = lastDeploy.year() === 1 ? '' : lastDeploy.format('YYYY-MM-DD HH:mm:ss');
+            }
+            setTimeout(refreshStripes, 500);
+        };
+        http.send();
+    }
+
+    refreshStripes();
+</script>
 @EndSection

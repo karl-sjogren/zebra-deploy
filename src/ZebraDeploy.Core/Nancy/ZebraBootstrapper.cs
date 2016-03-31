@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Nancy;
 using Nancy.Bootstrapper;
+using Nancy.Conventions;
 using Nancy.TinyIoc;
 
 namespace ZebraDeploy.Core.Nancy {
@@ -25,6 +26,14 @@ namespace ZebraDeploy.Core.Nancy {
             });
 
             base.RequestStartup(container, pipelines, context);
+        }
+
+        protected override void ConfigureConventions(NancyConventions conventions) {
+            base.ConfigureConventions(conventions);
+
+            conventions.StaticContentsConventions.Add(
+                StaticContentConventionBuilder.AddDirectory("assets", @"WebAssets")
+            );
         }
     }
 }
