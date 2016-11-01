@@ -1,4 +1,4 @@
-# zebra-deploy
+# zebra-deploy [![Build status](https://ci.appveyor.com/api/projects/status/b7m20i36frv9u1fo?svg=true)](https://ci.appveyor.com/project/karl-sjogren/zebra-deploy)
 
 Provides a simple way to deploy websites from zip files on IIS.
 
