@@ -56,7 +56,7 @@ namespace ZebraDeploy.Core {
         private void WatcherFileCreated(object sender, FileSystemEventArgs fileSystemEventArgs) {
             var file = fileSystemEventArgs.Name;
 
-            var stripe = _stripes.FirstOrDefault(s => s.File == file);
+            var stripe = _stripes.FirstOrDefault(s => s.ExecuteFor(file) != null);
             if(stripe == null)
                 return;
 

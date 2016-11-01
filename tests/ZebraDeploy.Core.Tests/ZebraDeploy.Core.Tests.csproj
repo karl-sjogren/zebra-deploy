@@ -55,6 +55,7 @@
     </Compile>
     <Compile Include="Configuration\ZebraConfigurationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StripeTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\ZebraDeploy.Core\ZebraDeploy.Core.csproj">
