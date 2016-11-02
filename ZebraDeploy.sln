@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZebraDeploy.Core", "src\ZebraDeploy.Core\ZebraDeploy.Core.csproj", "{2EA6FAB7-F551-43C8-90A1-86F3108793CC}"
 EndProject
@@ -12,6 +12,14 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZebraDeploy.Application", "src\ZebraDeploy.Application\ZebraDeploy.Application.csproj", "{348DDDC1-FDC7-4ED2-BAEC-672BC8D2AB5A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZebraDeploy.Service", "src\ZebraDeploy.Service\ZebraDeploy.Service.csproj", "{D105D2E4-6EC0-4FD6-903B-CBCEA00187B5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{AC7D25D4-EEBA-4938-9F9D-7190693629A9}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		appveyor.yml = appveyor.yml
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
