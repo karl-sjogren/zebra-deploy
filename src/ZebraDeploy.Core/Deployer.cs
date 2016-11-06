@@ -89,7 +89,7 @@ namespace ZebraDeploy.Core {
 
             foreach(var step in stripe.Steps) {
                 try {
-                    stripe.CurrentStep = step.ToString();
+                    stripe.CurrentStep = step.GetDescription(stripe, matchValues, zipPath);
                     stripe.Progress = (double)stripe.Steps.ToList().IndexOf(step) / stripe.Steps.Count * 100;
 
                     step.Invoke(stripe, matchValues, zipPath);

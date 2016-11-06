@@ -3,9 +3,8 @@ using ZebraDeploy.Core.Configuration;
 
 namespace ZebraDeploy.Core.StripeSteps {
     public abstract class StripeStep {
-        protected string StripeDescription { get; set; } = "Unknown stripe (or waiting for first run)";
-
         public abstract void Invoke(Stripe stripe, Dictionary<string, string> matchValues, string zipPath);
+        public abstract string GetDescription(Stripe stripe, Dictionary<string, string> matchValues, string zipPath);
 
         public static StripeStep CreateStep(StripeStepConfiguration configuration) {
             if(configuration.GetType() == typeof(CleanStepConfiguration))
@@ -25,9 +24,6 @@ namespace ZebraDeploy.Core.StripeSteps {
 
             return null;
         }
-
-        public override string ToString() {
-            return StripeDescription;
-        }
+        
     }
 }

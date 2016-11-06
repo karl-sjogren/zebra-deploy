@@ -31,6 +31,9 @@ Create a file named config.xml (yes xml, live with it) in your install location.
   </stripes>
   <reporters>
     <hipchat room="https://zebra.hipchat.com/v2/room/123456789/notification?auth_token=" success="true" failure="true" />
+    <pushover application-key="abcderfghijklmnopqrstuvwxyz" success="true" failure="true">
+      <user key="abcderfghijklmnopqrstuvwxyz" note="make a not of who this key is for" />
+    </pushover>
   </reporters>
 </configuration>
 ```
@@ -71,3 +74,7 @@ Reporters are invoked when a deployment finishes and can be configured to only n
 #### HipChat reporter
 
 Send information to a hipchat room specified by **room**.
+
+#### Pushover reporter
+
+Send information to a pushover. You need to register an app on pushover.net and enter both the application and user keys in the configuration.

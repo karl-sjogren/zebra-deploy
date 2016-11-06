@@ -17,6 +17,9 @@ namespace ZebraDeploy.Core.StripeSteps.Reporters {
             if(configuration.GetType() == typeof(HipChatReporterConfiguration))
                 return new HipChatReporter(configuration as HipChatReporterConfiguration);
 
+            if(configuration.GetType() == typeof(PushoverReporterConfiguration))
+                return new PushoverReporter(configuration as PushoverReporterConfiguration);
+
             return null;
         }
     }

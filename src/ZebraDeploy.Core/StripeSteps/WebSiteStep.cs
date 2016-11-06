@@ -16,16 +16,20 @@ namespace ZebraDeploy.Core.StripeSteps {
             _configuration = configuration;
         }
 
+        public override string GetDescription(Stripe stripe, Dictionary<string, string> matchValues, string zipPath) {
+            var configName = _configuration.Name.ReplaceMatchedValues(matchValues);
+
+            if(_configuration.Action == "start")
+                return "Start website " + configName;
+
+            return "Stop website " + configName;
+        }
+
         public override void Invoke(Stripe stripe, Dictionary<string, string> matchValues, string zipPath) {
             // Server manager seems to be using some COM behind the scenes
             // that doesn't like it multithreaded..
-            lock (_lock) {
+            lock(_lock) {
                 var configName = _configuration.Name.ReplaceMatchedValues(matchValues);
-                
-                if(_configuration.Action == "start")
-                    StripeDescription = "Start website " + configName;
-                else
-                    StripeDescription = "Stop website " + configName;
 
                 try {
                     var manager = new ServerManager();

@@ -14,14 +14,18 @@ namespace ZebraDeploy.Core.StripeSteps {
         public ServiceStep(ServiceStepConfiguration configuration) {
             _configuration = configuration;
         }
-        
+
+        public override string GetDescription(Stripe stripe, Dictionary<string, string> matchValues, string zipPath) {
+            var configName = _configuration.Name.ReplaceMatchedValues(matchValues);
+
+            if(_configuration.Action == "start")
+                return "Start service " + configName;
+
+            return "Stop service " + configName;
+        }
+
         public override void Invoke(Stripe stripe, Dictionary<string, string> matchValues, string zipPath) {
             var configName = _configuration.Name.ReplaceMatchedValues(matchValues);
-            
-            if(_configuration.Action == "start")
-                StripeDescription = "Start service " + configName;
-            else
-                StripeDescription = "Stop service " + configName;
 
             try {
                 var service = new ServiceController(configName);

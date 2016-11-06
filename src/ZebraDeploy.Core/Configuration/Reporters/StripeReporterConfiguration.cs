@@ -24,6 +24,9 @@ namespace ZebraDeploy.Core.Configuration.Reporters {
             if(element.Name == "hipchat")
                 return new HipChatReporterConfiguration(element);
 
+            if(element.Name == "pushover")
+                return new PushoverReporterConfiguration(element);
+
             return null;
         }
     }

@@ -15,12 +15,16 @@ namespace ZebraDeploy.Core.StripeSteps {
         public CleanStep(CleanStepConfiguration configuration) {
             _configuration = configuration;
         }
-        
+
+        public override string GetDescription(Stripe stripe, Dictionary<string, string> matchValues, string zipPath) {
+            var path = _configuration.Path.ReplaceMatchedValues(matchValues);
+
+            return "Clean path " + path;
+        }
+
         public override void Invoke(Stripe stripe, Dictionary<string, string> matchValues, string zipPath) {
             var path = _configuration.Path.ReplaceMatchedValues(matchValues);
             var excludes = _configuration.Excludes.Select(e => e.ReplaceMatchedValues(matchValues)).ToList();
-
-            StripeDescription = "Clean path " + path;
 
             _log.Debug("Cleaning path {path}, excluding {excludes}.", path, string.Join(", ", excludes));
 

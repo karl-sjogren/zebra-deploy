@@ -12,13 +12,17 @@ namespace ZebraDeploy.Core.StripeSteps {
         public OutputStep(OutputStepConfiguration configuration) {
             _configuration = configuration;
         }
-        
+
+        public override string GetDescription(Stripe stripe, Dictionary<string, string> matchValues, string zipPath) {
+            var path = _configuration.Path.ReplaceMatchedValues(matchValues);
+
+            return "Extract content to " + path;
+        }
+
         public override void Invoke(Stripe stripe, Dictionary<string, string> matchValues, string zipPath) {
             var path = _configuration.Path.ReplaceMatchedValues(matchValues);
             _log.Debug("Extracting {zipFile}, to {path}.", zipPath, path);
-
-            StripeDescription = "Extract content to " + path;
-
+            
             using(var zip = ZipFile.Read(zipPath)) {
                 zip.ExtractAll(path, ExtractExistingFileAction.OverwriteSilently);
             }

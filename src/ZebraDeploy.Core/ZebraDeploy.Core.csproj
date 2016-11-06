@@ -73,6 +73,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\Reporters\PushoverReporterConfiguration.cs" />
     <Compile Include="Configuration\ServiceStepConfiguration.cs" />
     <Compile Include="Configuration\Reporters\HipChatReporterConfiguration.cs" />
     <Compile Include="Configuration\Reporters\StripeReporterConfiguration.cs" />
@@ -92,6 +93,7 @@
     <Compile Include="Nancy\Modules\ZebraModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Stripe.cs" />
+    <Compile Include="StripeSteps\Reporters\PushoverReporter.cs" />
     <Compile Include="StripeSteps\ServiceStep.cs" />
     <Compile Include="StripeSteps\Reporters\HipChatReporter.cs" />
     <Compile Include="StripeSteps\Reporters\StripeReporter.cs" />

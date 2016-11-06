@@ -16,18 +16,19 @@ namespace ZebraDeploy.Core.StripeSteps.Reporters {
         public override void Invoke(Stripe stripe) {
             var obj = new {
                 color = stripe.Failed ? "red" : "green",
-                message = stripe.Failed ? $"Failed to deploy stripe {stripe.File} at {Environment.MachineName}. It failed at step {stripe.CurrentStep}." : $"Successfully deployed stripe {stripe.File} at {Environment.MachineName}.",
+                message = stripe.Failed ? $"Failed to deploy stripe {stripe.File} at {Environment.MachineName}. It failed at step \"{stripe.CurrentStep}\"." : $"Successfully deployed stripe {stripe.File} at {Environment.MachineName}.",
                 notify = stripe.Failed,
                 message_format = "text"
             };
 
-            var wc = new WebClient();
-            wc.Headers.Add("Content-Type", "application/json");
+            using(var wc = new WebClient()) {
+                wc.Headers.Add("Content-Type", "application/json");
 
-            try {
-                wc.UploadString(_configuration.Room, JsonConvert.SerializeObject(obj));
-            } catch(Exception e) {
-                _log.Error(e, "Failed to report {file} to HipChat.", stripe.File);
+                try {
+                    wc.UploadString(_configuration.Room, JsonConvert.SerializeObject(obj));
+                } catch(Exception e) {
+                    _log.Error(e, "Failed to report {file} to HipChat.", stripe.File);
+                }
             }
         }
     }
