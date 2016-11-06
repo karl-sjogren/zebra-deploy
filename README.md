@@ -32,7 +32,7 @@ Create a file named config.xml (yes xml, live with it) in your install location.
   <reporters>
     <hipchat room="https://zebra.hipchat.com/v2/room/123456789/notification?auth_token=" success="true" failure="true" />
     <pushover application-key="abcderfghijklmnopqrstuvwxyz" success="true" failure="true">
-      <user key="abcderfghijklmnopqrstuvwxyz" note="make a not of who this key is for" />
+      <user key="abcderfghijklmnopqrstuvwxyz" note="make a note of who this key is for" />
     </pushover>
   </reporters>
 </configuration>
