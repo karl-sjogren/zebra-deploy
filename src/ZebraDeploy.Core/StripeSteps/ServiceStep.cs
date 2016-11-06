@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ServiceProcess;
 using System.Threading;
 using Serilog;
 using ZebraDeploy.Core.Configuration;
+using ZebraDeploy.Core.Extensions;
 
 namespace ZebraDeploy.Core.StripeSteps {
     public class ServiceStep : StripeStep {
@@ -12,22 +14,22 @@ namespace ZebraDeploy.Core.StripeSteps {
         public ServiceStep(ServiceStepConfiguration configuration) {
             _configuration = configuration;
         }
-
-        public override string ToString() {
+        
+        public override void Invoke(Stripe stripe, Dictionary<string, string> matchValues, string zipPath) {
+            var configName = _configuration.Name.ReplaceMatchedValues(matchValues);
+            
             if(_configuration.Action == "start")
-                return "Start Service " + _configuration.Name;
+                StripeDescription = "Start service " + configName;
+            else
+                StripeDescription = "Stop service " + configName;
 
-            return "Stop Service " + _configuration.Name;
-        }
-
-        public override void Invoke(Stripe stripe, string zipPath) {
             try {
-                var service = new ServiceController(_configuration.Name);
+                var service = new ServiceController(configName);
 
                 try {
                     service.Refresh();
                 } catch(Exception) {
-                    throw new InvalidOperationException($"Failed to locate refresh values for service {_configuration.Name}.");
+                    throw new InvalidOperationException($"Failed to locate refresh values for service {configName}.");
                 }
 
                 var timestamp = DateTime.Now;
@@ -35,7 +37,7 @@ namespace ZebraDeploy.Core.StripeSteps {
                     if(service.Status == ServiceControllerStatus.Running)
                         return;
 
-                    _log.Debug("Starting service {serviceName}", _configuration.Name);
+                    _log.Debug("Starting service {serviceName}", configName);
 
                     var state = service.Status;
                     while(state != ServiceControllerStatus.Running) {
@@ -56,7 +58,7 @@ namespace ZebraDeploy.Core.StripeSteps {
                     if(service.Status == ServiceControllerStatus.Stopped)
                         return;
 
-                    _log.Debug("Stopping service {serviceName}", _configuration.Name);
+                    _log.Debug("Stopping service {serviceName}", configName);
 
                     var state = service.Status;
                     while(state != ServiceControllerStatus.Stopped) {
@@ -75,7 +77,7 @@ namespace ZebraDeploy.Core.StripeSteps {
                     }
                 }
             } catch(Exception e) {
-                _log.Error(e, "Failed while working with service {serviceName}", _configuration.Name);
+                _log.Error(e, "Failed while working with service {serviceName}", configName);
             }
         }
     }

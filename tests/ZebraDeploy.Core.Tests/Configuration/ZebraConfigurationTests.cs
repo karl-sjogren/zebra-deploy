@@ -1,10 +1,11 @@
-﻿using System.Linq;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using NUnit.Framework;
 using ZebraDeploy.Core.Configuration;
 using ZebraDeploy.Core.Configuration.Reporters;
 
 namespace ZebraDeploy.Core.Tests.Configuration {
-    [TestFixture]
+    [TestFixture, ExcludeFromCodeCoverage]
     public class ZebraConfigurationTests {
         [Test]
         public void LoadSampleConfiguration() {

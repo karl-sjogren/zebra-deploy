@@ -56,11 +56,14 @@ namespace ZebraDeploy.Core {
         private void WatcherFileCreated(object sender, FileSystemEventArgs fileSystemEventArgs) {
             var file = fileSystemEventArgs.Name;
 
-            var stripe = _stripes.FirstOrDefault(s => s.ExecuteFor(file) != null);
+            var stripe = _stripes
+                .Select(s => new { StripeInstance = s, MatchValues = s.ExecuteFor(file) })
+                .FirstOrDefault(s => s.MatchValues != null);
+
             if(stripe == null)
                 return;
 
-            lock (_lock) {
+            lock(_lock) {
                 var threadsToRemove = _threads.Where(kvp => !kvp.Value.IsAlive).Select(kvp => kvp.Key).ToArray();
                 foreach(var key in threadsToRemove) {
                     _threads.Remove(key);
@@ -69,7 +72,7 @@ namespace ZebraDeploy.Core {
                 if(_threads.ContainsKey(file))
                     return;
 
-                ThreadStart starter = () => ExecuteStripe(stripe);
+                ThreadStart starter = () => ExecuteStripe(stripe.StripeInstance, stripe.MatchValues);
                 var thread = new Thread(starter);
                 thread.Start();
 
@@ -77,7 +80,7 @@ namespace ZebraDeploy.Core {
             }
         }
 
-        private void ExecuteStripe(Stripe stripe) {
+        private void ExecuteStripe(Stripe stripe, Dictionary<string, string> matchValues) {
             var zipPath = Path.Combine(_configuration.BasePath, stripe.File);
             _log.Information("Executing stripe for {file}.", zipPath);
 
@@ -89,7 +92,7 @@ namespace ZebraDeploy.Core {
                     stripe.CurrentStep = step.ToString();
                     stripe.Progress = (double)stripe.Steps.ToList().IndexOf(step) / stripe.Steps.Count * 100;
 
-                    step.Invoke(stripe, zipPath);
+                    step.Invoke(stripe, matchValues, zipPath);
                 } catch(Exception e) {
                     stripe.Failed = true;
                     _log.Error(e, "Failed to execute step {type}.", step.GetType().Name);
@@ -142,7 +145,7 @@ namespace ZebraDeploy.Core {
             _host.Stop();
             _host.Dispose();
 
-            lock (_lock) {
+            lock(_lock) {
                 foreach(var kvp in _threads) {
                     if(kvp.Value.IsAlive)
                         kvp.Value.Abort();

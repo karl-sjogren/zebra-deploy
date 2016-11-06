@@ -1,9 +1,10 @@
-﻿using System.Xml.Linq;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Xml.Linq;
 using NUnit.Framework;
 using ZebraDeploy.Core.Configuration;
 
 namespace ZebraDeploy.Core.Tests {
-    [TestFixture]
+    [TestFixture, ExcludeFromCodeCoverage]
     public class StripeTests {
         [TestCase("website.zip", "website.zip", true)]
         [TestCase("website.zip", "WEBSITE.zip", true)]

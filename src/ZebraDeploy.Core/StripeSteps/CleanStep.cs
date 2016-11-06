@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using Serilog;
 using ZebraDeploy.Core.Configuration;
+using ZebraDeploy.Core.Extensions;
 
 namespace ZebraDeploy.Core.StripeSteps {
     public class CleanStep : StripeStep {
@@ -13,19 +15,20 @@ namespace ZebraDeploy.Core.StripeSteps {
         public CleanStep(CleanStepConfiguration configuration) {
             _configuration = configuration;
         }
+        
+        public override void Invoke(Stripe stripe, Dictionary<string, string> matchValues, string zipPath) {
+            var path = _configuration.Path.ReplaceMatchedValues(matchValues);
+            var excludes = _configuration.Excludes.Select(e => e.ReplaceMatchedValues(matchValues)).ToList();
 
-        public override string ToString() {
-            return "Cleaning path " + _configuration.Path;
-        }
+            StripeDescription = "Clean path " + path;
 
-        public override void Invoke(Stripe stripe, string zipPath) {
-            _log.Debug("Cleaning path {path}, excluding {excludes}.", _configuration.Path, string.Join(", ", _configuration.Excludes));
+            _log.Debug("Cleaning path {path}, excluding {excludes}.", path, string.Join(", ", excludes));
 
             var startTime = DateTime.Now;
             while(true) {
                 var failed = false;
                 try {
-                    Clean();
+                    Clean(path, excludes);
                 } catch(Exception) {
                     if(startTime.AddSeconds(30) > DateTime.Now)
                         break;
@@ -39,20 +42,20 @@ namespace ZebraDeploy.Core.StripeSteps {
             }
         }
 
-        private void Clean() {
-            foreach(var directory in Directory.EnumerateDirectories(_configuration.Path)) {
+        private static void Clean(string path, IList<string> excludes) {
+            foreach(var directory in Directory.EnumerateDirectories(path)) {
                 var info = new DirectoryInfo(directory);
 
-                if(_configuration.Excludes.Contains(info.Name.ToLowerInvariant()))
+                if(excludes.Contains(info.Name.ToLowerInvariant()))
                     continue;
 
                 Directory.Delete(info.FullName, true);
             }
 
-            foreach(var file in Directory.EnumerateFiles(_configuration.Path)) {
+            foreach(var file in Directory.EnumerateFiles(path)) {
                 var info = new FileInfo(file);
 
-                if(_configuration.Excludes.Contains(info.Name.ToLowerInvariant()))
+                if(excludes.Contains(info.Name.ToLowerInvariant()))
                     continue;
 
                 File.Delete(info.FullName);

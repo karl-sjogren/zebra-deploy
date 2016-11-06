@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using Microsoft.Web.Administration;
 using Serilog;
 using ZebraDeploy.Core.Configuration;
+using ZebraDeploy.Core.Extensions;
 
 namespace ZebraDeploy.Core.StripeSteps {
     public class AppPoolStep : StripeStep {
@@ -13,23 +15,23 @@ namespace ZebraDeploy.Core.StripeSteps {
         public AppPoolStep(AppPoolStepConfiguration configuration) {
             _configuration = configuration;
         }
-
-        public override string ToString() {
-            if (_configuration.Action == "start")
-                return "Start ApplicationPool " + _configuration.Name;
-
-            return "Stop ApplicationPool " + _configuration.Name;
-        }
-
-        public override void Invoke(Stripe stripe, string zipPath) {
+        
+        public override void Invoke(Stripe stripe, Dictionary<string, string> matchValues, string zipPath) {
             // Server manager seems to be using some COM behind the scenes
             // that doesn't like it multithreaded..
-            lock (_lock) {
+            lock(_lock) {
+                var configName = _configuration.Name.ReplaceMatchedValues(matchValues);
+
+                if(_configuration.Action == "start")
+                    StripeDescription = "Start application pool " + configName;
+                else
+                    StripeDescription = "Stop application pool " + configName;
+
                 try {
                     var manager = new ServerManager();
-                    var pool = manager.ApplicationPools[_configuration.Name];
+                    var pool = manager.ApplicationPools[configName];
                     if(pool == null)
-                        throw new InvalidOperationException($"Failed to locate application pool named {_configuration.Name}.");
+                        throw new InvalidOperationException($"Failed to locate application pool named {configName}.");
 
 
                     var timestamp = DateTime.Now;
@@ -37,7 +39,7 @@ namespace ZebraDeploy.Core.StripeSteps {
                         if(pool.State == ObjectState.Started || pool.State == ObjectState.Starting)
                             return;
 
-                        _log.Debug("Starting application pool {poolName}", _configuration.Name);
+                        _log.Debug("Starting application pool {poolName}", configName);
 
                         var state = ObjectState.Unknown;
                         while(state != ObjectState.Started) {
@@ -57,7 +59,7 @@ namespace ZebraDeploy.Core.StripeSteps {
                         if(pool.State == ObjectState.Stopped || pool.State == ObjectState.Stopping)
                             return;
 
-                        _log.Debug("Stopping application pool {poolName}", _configuration.Name);
+                        _log.Debug("Stopping application pool {poolName}", configName);
 
                         var state = ObjectState.Unknown;
                         while(state != ObjectState.Stopped) {
@@ -75,7 +77,7 @@ namespace ZebraDeploy.Core.StripeSteps {
                         }
                     }
                 } catch(Exception e) {
-                    _log.Error(e, "Failed while working with application pool {poolName}", _configuration.Name);
+                    _log.Error(e, "Failed while working with application pool {poolName}", configName);
                 }
             }
         }
