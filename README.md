@@ -31,7 +31,7 @@ Create a file named config.xml (yes xml, live with it) in your install location.
   </stripes>
   <reporters>
     <hipchat room="https://zebra.hipchat.com/v2/room/123456789/notification?auth_token=" success="true" failure="true" />
-    <pushover application-key="abcderfghijklmnopqrstuvwxyz" success="true" failure="true">
+    <pushover application-key="abcderfghijklmnopqrstuvwxyz" success="true" failure="true" success-priority="-1" failure-priority="0">
       <user key="abcderfghijklmnopqrstuvwxyz" note="make a not of who this key is for" />
     </pushover>
   </reporters>
@@ -77,4 +77,9 @@ Send information to a hipchat room specified by **room**.
 
 #### Pushover reporter
 
-Send information to a pushover. You need to register an app on pushover.net and enter both the application and user keys in the configuration.
+Send information to Pushover. You need to register an app on pushover.net and enter both the application and user keys in the configuration.
+
+**Priority**
+
+The fields **success-priority** and **failure-priority** can be used to set custom priority levels according to https://pushover.net/api#priority.
+The default is -1 for successful deploys and 0 for failures.
