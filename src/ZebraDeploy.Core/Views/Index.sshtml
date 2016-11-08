@@ -46,7 +46,7 @@
                 var stripe = result[i];
                 var row = document.querySelector('tr[data-file=\'' + stripe.file + '\']');
 
-                row.querySelector('.file').innerHTML = stripe.file;
+                row.querySelector('.file').innerHTML = stripe.file.replace('<', '&lt;').replace('>', '&gt;');
                 row.querySelector('.current-step').innerHTML = stripe.currentStep;
                 row.querySelector('.progress').innerHTML = parseInt(stripe.progress) + ' %';
                 row.querySelector('.failed input').checked = stripe.failed;

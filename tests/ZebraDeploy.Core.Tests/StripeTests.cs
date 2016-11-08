@@ -25,6 +25,7 @@ namespace ZebraDeploy.Core.Tests {
         }
 
         [TestCase("website-(?<Version>[\\.\\d]*?).zip", "website-1.0.0.zip", "Version", "1.0.0")]
+        [TestCase("deploy_(?<Type>.*?).zip", "deploy_test.zip", "Type", "test")]
         [TestCase("website-(?<Version>\\d).(?<Version>\\d).(?<Version>\\d).zip", "website-1.0.0.zip", "Version", "0", Description = "Should use last group match, ie 0.")]
         public void StripeExtractsMatchGroups(string filePattern, string fileName, string groupName, string groupValue) {
             var doc = new XElement("stripe", new XAttribute("file", filePattern));

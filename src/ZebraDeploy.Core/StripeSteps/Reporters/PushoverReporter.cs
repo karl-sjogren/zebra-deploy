@@ -13,7 +13,7 @@ namespace ZebraDeploy.Core.StripeSteps.Reporters {
             _configuration = configuration;
         }
 
-        public override void Invoke(Stripe stripe) {
+        public override void Invoke(Stripe stripe, string zipName) {
 
             foreach(var userKey in _configuration.UserKeys) {
 
@@ -21,14 +21,14 @@ namespace ZebraDeploy.Core.StripeSteps.Reporters {
                 values.Add("token", _configuration.ApplicationKey);
                 values.Add("user", userKey);
                 values.Add("title", "Zebra Deploy");
-                values.Add("message", stripe.Failed ? $"Failed to deploy stripe {stripe.File} at {Environment.MachineName}. It failed at step \"{stripe.CurrentStep}\"." : $"Successfully deployed stripe {stripe.File} at {Environment.MachineName}.");
+                values.Add("message", stripe.Failed ? $"Failed to deploy stripe {zipName} at {Environment.MachineName}. It failed at step \"{stripe.CurrentStep}\"." : $"Successfully deployed stripe {zipName} at {Environment.MachineName}.");
                 values.Add("priority", stripe.Failed ? "0" : "-1");
 
                 using(var wc = new WebClient()) {
                     try {
                         wc.UploadValues("https://api.pushover.net/1/messages.json", values);
                     } catch(Exception e) {
-                        _log.Error(e, "Failed to report {file} to Pusohver {user}.", stripe.File, userKey);
+                        _log.Error(e, "Failed to report {file} to Pusohver {user}.", zipName, userKey);
                     }
                 }
             }

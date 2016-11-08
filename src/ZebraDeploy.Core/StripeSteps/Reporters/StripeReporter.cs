@@ -7,7 +7,7 @@ namespace ZebraDeploy.Core.StripeSteps.Reporters {
         public bool ReportSuccess => _configuration.ReportSuccess;
         public bool ReportFailure => _configuration.ReportFailure;
 
-        public abstract void Invoke(Stripe stripe);
+        public abstract void Invoke(Stripe stripe, string zipName);
 
         protected StripeReporter(StripeReporterConfiguration configuration) {
             this._configuration = configuration;

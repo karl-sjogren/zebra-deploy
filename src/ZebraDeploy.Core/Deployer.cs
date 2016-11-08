@@ -72,7 +72,7 @@ namespace ZebraDeploy.Core {
                 if(_threads.ContainsKey(file))
                     return;
 
-                ThreadStart starter = () => ExecuteStripe(stripe.StripeInstance, stripe.MatchValues);
+                ThreadStart starter = () => ExecuteStripe(stripe.StripeInstance, file, stripe.MatchValues);
                 var thread = new Thread(starter);
                 thread.Start();
 
@@ -80,8 +80,8 @@ namespace ZebraDeploy.Core {
             }
         }
 
-        private void ExecuteStripe(Stripe stripe, Dictionary<string, string> matchValues) {
-            var zipPath = Path.Combine(_configuration.BasePath, stripe.File);
+        private void ExecuteStripe(Stripe stripe, string zipName, Dictionary<string, string> matchValues) {
+            var zipPath = Path.Combine(_configuration.BasePath, zipName);
             _log.Information("Executing stripe for {file}.", zipPath);
 
             stripe.Progress = 0;
@@ -99,7 +99,7 @@ namespace ZebraDeploy.Core {
 
                     foreach(var reporter in stripe.Reporters.Concat(_globalReporters).Where(r => r.ReportFailure)) {
                         try {
-                            reporter.Invoke(stripe);
+                            reporter.Invoke(stripe, zipName);
                         } catch(Exception ex) {
                             _log.Error(ex, "Failed to execute reporter {type}.", reporter.GetType().Name);
                         }
@@ -122,7 +122,7 @@ namespace ZebraDeploy.Core {
 
             foreach(var reporter in stripe.Reporters.Concat(_globalReporters).Where(r => r.ReportSuccess)) {
                 try {
-                    reporter.Invoke(stripe);
+                    reporter.Invoke(stripe, zipName);
                 } catch(Exception e) {
                     _log.Error(e, "Failed to execute reporter {type}.", reporter.GetType().Name);
                 }
