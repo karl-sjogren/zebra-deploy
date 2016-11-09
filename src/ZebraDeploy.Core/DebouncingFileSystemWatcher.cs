@@ -16,7 +16,7 @@ namespace ZebraDeploy.Core {
         private readonly Dictionary<string, DebouncedFileEvent> _debouncedFileEvents;
         private readonly object _lock = new object();
 
-        private const int MilliSecondsSinceLastChange = 5000;
+        private const int MilliSecondsSinceLastChange = 10000;
         private const int TimerInterval = 2000;
 
         private readonly FileSystemWatcher _watcher;
