@@ -88,6 +88,7 @@
     <Compile Include="Deployer.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\XDocumentExtensions.cs" />
+    <Compile Include="FileUtil.cs" />
     <Compile Include="Nancy\ZebraBootstrapper.cs" />
     <Compile Include="Nancy\Models\StripeModel.cs" />
     <Compile Include="Nancy\Modules\ZebraModule.cs" />

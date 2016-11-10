@@ -16,15 +16,17 @@ namespace ZebraDeploy.Core {
         private readonly Dictionary<string, DebouncedFileEvent> _debouncedFileEvents;
         private readonly object _lock = new object();
 
-        private const int MilliSecondsSinceLastChange = 10000;
+        private const int MilliSecondsSinceLastChange = 5000;
         private const int TimerInterval = 2000;
 
         private readonly FileSystemWatcher _watcher;
         private readonly Timer _triggerTimer;
         private readonly string _path;
+        private readonly bool _requireExclusiveAccess;
 
-        public DebouncingFileSystemWatcher(string path, string filter = null) {
+        public DebouncingFileSystemWatcher(string path, string filter = null, bool requireExclusiveAccess = false) {
             _path = path;
+            _requireExclusiveAccess = requireExclusiveAccess;
             _watcher = filter != null ? new FileSystemWatcher(path, filter) : new FileSystemWatcher(path);
 
             _debouncedFileEvents = new Dictionary<string, DebouncedFileEvent>();
@@ -63,6 +65,11 @@ namespace ZebraDeploy.Core {
                         if(fileEvent.Changed.HasValue && fileEvent.Changed.Value.AddMilliseconds(MilliSecondsSinceLastChange) > DateTime.Now)
                             break;
 
+                        if(_requireExclusiveAccess && FileUtil.WhoIsLocking(fileInfo.FullName).Any()) {
+                            _log.Debug("Waiting for exclusive file access before triggering FileCreated for {path}", kvp.Key);
+                            break;
+                        }
+
                         var args = new FileSystemEventArgs(WatcherChangeTypes.Created, _path, kvp.Key);
                         fileEvent.Created = null;
                         _log.Debug("Triggering FileCreated for {path}", kvp.Key);
@@ -70,8 +77,13 @@ namespace ZebraDeploy.Core {
                     }
 
                     if(fileEvent.Changed.HasValue) {
-                        if(fileInfo.LastWriteTime.AddMilliseconds(MilliSecondsSinceLastChange) > DateTime.Now)
+                        if(fileEvent.Changed.Value.AddMilliseconds(MilliSecondsSinceLastChange) > DateTime.Now)
                             break;
+
+                        if(_requireExclusiveAccess && FileUtil.WhoIsLocking(fileInfo.FullName).Any()) {
+                            _log.Debug("Waiting for exclusive file access before triggering FileChanged for {path}", kvp.Key);
+                            break;
+                        }
 
                         var args = new FileSystemEventArgs(WatcherChangeTypes.Created, _path, kvp.Key);
                         fileEvent.Changed = null;

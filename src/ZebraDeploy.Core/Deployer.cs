@@ -35,10 +35,10 @@ namespace ZebraDeploy.Core {
             _log = Log.ForContext<Deployer>(); // Recreate this so we can log properly
 
             _configuration = ZebraConfiguration.LoadFromFile(configurationFile);
-            _watcher = new DebouncingFileSystemWatcher(_configuration.BasePath, "*.zip");
+            _watcher = new DebouncingFileSystemWatcher(_configuration.BasePath, "*.zip", true);
             _threads = new Dictionary<string, Thread>();
 
-            _watcher.FileCreated += WatcherFileCreated;
+            _watcher.FileChanged += WatcherFileChanged;
             _stripes = _configuration.Stripes.Select(c => new Stripe(c)).ToList();
             _globalReporters = _configuration.Reporters.Select(StripeReporter.CreateStep).Where(x => x != null).ToList();
 
@@ -53,7 +53,7 @@ namespace ZebraDeploy.Core {
             }
         }
 
-        private void WatcherFileCreated(object sender, FileSystemEventArgs fileSystemEventArgs) {
+        private void WatcherFileChanged(object sender, FileSystemEventArgs fileSystemEventArgs) {
             var file = fileSystemEventArgs.Name;
 
             var stripe = _stripes
