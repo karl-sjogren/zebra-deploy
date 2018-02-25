@@ -11,7 +11,7 @@
 			<th>Failed</th>
 		</tr>
 		@Each
-			<tr data-file="@Current.File">
+			<tr data-file="@Current.Id">
 				<td class="file">@Current.File</td>
 				<td class="current-step">@Current.CurrentStep</td>
 				<td class="last-deploy">@Current.LastDeploy</td>
@@ -44,9 +44,9 @@
             
             for (var i = 0; i < result.length; i++) {
                 var stripe = result[i];
-                var row = document.querySelector('tr[data-file=\'' + stripe.file + '\']');
+                var row = document.querySelector('tr[data-file=\'' + stripe.id + '\']');
 
-                row.querySelector('.file').innerHTML = stripe.file.replace('<', '&lt;').replace('>', '&gt;');
+                row.querySelector('.file').innerHTML = stripe.file.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;');
                 row.querySelector('.current-step').innerHTML = stripe.currentStep;
                 row.querySelector('.progress').innerHTML = parseInt(stripe.progress) + ' %';
                 row.querySelector('.failed input').checked = stripe.failed;

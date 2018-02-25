@@ -3,18 +3,22 @@ using Nancy;
 using Nancy.Bootstrapper;
 using Nancy.Conventions;
 using Nancy.TinyIoc;
+using ZebraDeploy.Core.Configuration;
 
 namespace ZebraDeploy.Core.Nancy {
     public class ZebraBootstrapper : DefaultNancyBootstrapper {
+        private readonly ZebraConfiguration _configuration;
         private readonly List<Stripe> _stripes;
 
-        public ZebraBootstrapper(List<Stripe> stripes) {
+        public ZebraBootstrapper(ZebraConfiguration configuration, List<Stripe> stripes) {
+            _configuration = configuration;
             _stripes = stripes;
         }
 
         protected override void ConfigureApplicationContainer(TinyIoCContainer container) {
             base.ConfigureApplicationContainer(container);
 
+            container.Register(_configuration);
             container.Register<IList<Stripe>>(_stripes);
         }
 

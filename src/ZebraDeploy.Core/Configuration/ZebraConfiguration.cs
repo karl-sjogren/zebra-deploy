@@ -8,6 +8,9 @@ using ZebraDeploy.Core.Extensions;
 namespace ZebraDeploy.Core.Configuration {
     public class ZebraConfiguration {
         public string BasePath { get; private set; }
+        public bool AllowHttpUploads { get; private set; }
+        public string SecurityIV { get; private set; }
+        public string SecurityKey { get; private set; }
 
         private readonly List<StripeConfiguration> _stripes;
         private readonly List<StripeReporterConfiguration> _reporters;
@@ -17,6 +20,14 @@ namespace ZebraDeploy.Core.Configuration {
 
         internal ZebraConfiguration(XElement element) {
             BasePath = element.Element("basePath").ValueOrDefault();
+
+            var securityElement = element.Element("security");
+            if(securityElement != null) {
+                AllowHttpUploads = securityElement.Attribute("allowUpload").ValueOrDefault() == "true";
+                SecurityIV = securityElement.Attribute("encryptionIV").ValueOrDefault();
+                SecurityKey = securityElement.Attribute("encryptionKey").ValueOrDefault();
+            }
+            
             _stripes = element.Descendants("stripe").Select(el => new StripeConfiguration(el)).ToList();
             _reporters = element.Element("reporters")?.Elements().Select(StripeReporterConfiguration.FromXElement).ToList() ?? new List<StripeReporterConfiguration>();
         }

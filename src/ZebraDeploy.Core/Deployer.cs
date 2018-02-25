@@ -44,7 +44,7 @@ namespace ZebraDeploy.Core {
 
             var nancyPort = 7777;
             try {
-                var bootstrapper = new ZebraBootstrapper(_stripes);
+                var bootstrapper = new ZebraBootstrapper(_configuration, _stripes);
                 _host = new NancyHost(new Uri("http://localhost:" + nancyPort), bootstrapper, new HostConfiguration {
                     RewriteLocalhost = true
                 });
