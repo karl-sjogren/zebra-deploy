@@ -34,6 +34,7 @@ Create a file named config.xml (yes xml, live with it) in your install location.
     <pushover application-key="abcderfghijklmnopqrstuvwxyz" success="true" failure="true" success-priority="-1" failure-priority="0">
       <user key="abcderfghijklmnopqrstuvwxyz" note="make a note of who this key is for, completely optional" />
     </pushover>
+    <slack hookUrl="https://hooks.slack.com/services/123456789/123456789/123456789123456789" success="true" failure="true" />
   </reporters>
 </configuration>
 ```
@@ -83,3 +84,7 @@ Send information to Pushover. You need to register an app on pushover.net and en
 
 The fields **success-priority** and **failure-priority** can be used to set custom priority levels according to https://pushover.net/api#priority.
 The default is -1 for successful deploys and 0 for failures.
+
+#### Slack reporter
+
+Send information to a Slack channel. You need to register an app for Slack and enable incoming webhooks, then put the webhook for the right channel in the configuration.

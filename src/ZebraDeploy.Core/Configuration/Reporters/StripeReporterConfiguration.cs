@@ -27,6 +27,9 @@ namespace ZebraDeploy.Core.Configuration.Reporters {
             if(element.Name == "pushover")
                 return new PushoverReporterConfiguration(element);
 
+            if(element.Name == "slack")
+                return new SlackReporterConfiguration(element);
+
             return null;
         }
     }

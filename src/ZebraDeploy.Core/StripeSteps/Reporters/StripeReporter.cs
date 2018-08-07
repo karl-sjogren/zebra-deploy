@@ -20,6 +20,9 @@ namespace ZebraDeploy.Core.StripeSteps.Reporters {
             if(configuration.GetType() == typeof(PushoverReporterConfiguration))
                 return new PushoverReporter(configuration as PushoverReporterConfiguration);
 
+            if(configuration.GetType() == typeof(SlackReporterConfiguration))
+                return new SlackReporter(configuration as SlackReporterConfiguration);
+
             return null;
         }
     }
